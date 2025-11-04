@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>資源枯渇時間計算ツール</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 1em;
+      max-width: 500px;
+      margin: auto;
+      background: #f9f9f9;
+    }
+    h1 {
+      font-size: 1.4em;
+      margin-bottom: 0.5em;
+    }
+    label {
+      display: block;
+      margin-top: 1em;
+    }
+    input {
+      width: 100%;
+      padding: 0.5em;
+      font-size: 1em;
+      margin-top: 0.3em;
+    }
+    button {
+      margin-top: 1.5em;
+      padding: 0.7em;
+      font-size: 1em;
+      width: 100%;
+      background: #007aff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+    #result {
+      margin-top: 1.5em;
+      font-size: 1.2em;
+      background: #fff;
+      padding: 1em;
+      border-radius: 5px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <h1>資源枯渇時間計算ツール</h1>
+
+  <label for="previous">30秒前の資源量</label>
+  <input type="number" id="previous" placeholder="例: 500">
+
+  <label for="current">現在の資源量</label>
+  <input type="number" id="current" placeholder="例: 320">
+
+  <button onclick="calculate()">計算する</button>
+
+  <div id="result"></div>
+
+  <script>
+    function calculate() {
+      const previous = parseFloat(document.getElementById("previous").value);
+      const current = parseFloat(document.getElementById("current").value);
+      const elapsedSeconds = 30;
+
+      if (isNaN(previous) || isNaN(current)) {
+        document.getElementById("result").innerText = "⚠️ 数値を正しく入力してください";
+        return;
+      }
+
+      const delta = previous - current;
+      const perMinute = (delta / elapsedSeconds) * 60;
+
+      if (perMinute <= 0) {
+        document.getElementById("result").innerText = "⚠️ 資源が減っていません（または増えています）";
+        return;
+      }
+
+      const remainingMinutes = current / perMinute;
+      const hours = Math.floor(remainingMinutes / 60);
+      const minutes = Math.floor(remainingMinutes % 60);
+
+      document.getElementById("result").innerText = `⏳ 残り時間：${hours}時間${minutes}分`;
+    }
+  </script>
+</body>
+</html>
